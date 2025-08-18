@@ -1,5 +1,6 @@
 import { initStore } from './state/store.js';
 import { renderHome } from './pages/Home.js';
+import './styles/styles.css';
 
 const store = initStore();
 

@@ -1,0 +1,6 @@
+:root { --gap: 1rem; font-family: system-ui, sans-serif; }
+body { margin: 0; }
+header, nav, footer { padding: var(--gap); }
+main { display: grid; gap: var(--gap); padding: var(--gap); }
+#table { overflow: auto; }
+.dark { background: #111; color: #eee; }
