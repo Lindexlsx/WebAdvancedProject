@@ -1,24 +1,32 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+import { initStore } from './state/store.js';
+import { renderHome } from './pages/Home.js';
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+const store = initStore();
 
-setupCounter(document.querySelector('#counter'))
+function mount() {
+  renderHome(store); // bouwt de UI op in #table en #visual
+  wireEvents();
+}
+
+function wireEvents() {
+  const search = document.getElementById('search');
+  const sort = document.getElementById('sort');
+  const themeToggle = document.getElementById('theme-toggle');
+
+  search.addEventListener('input', (e) => {
+    store.search = e.target.value;
+    renderHome(store);
+  });
+
+  sort.addEventListener('change', (e) => {
+    store.sort = e.target.value;
+    renderHome(store);
+  });
+
+  themeToggle.addEventListener('click', () => {
+    document.documentElement.classList.toggle('dark');
+    // optioneel: preference bewaren in localStorage
+  });
+}
+
+mount();

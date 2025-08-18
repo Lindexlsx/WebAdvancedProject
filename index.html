@@ -1,13 +1,33 @@
 <!doctype html>
-<html lang="en">
+<html lang="nl">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Web Advanced Project</title>
   </head>
   <body>
-    <div id="app"></div>
+    <header>
+      <h1>Web Advanced – Project</h1>
+      <nav>
+        <input id="search" type="search" placeholder="Zoeken..." />
+        <select id="sort">
+          <option value="name-asc">Naam ↑</option>
+          <option value="name-desc">Naam ↓</option>
+        </select>
+        <button id="theme-toggle">Thema</button>
+      </nav>
+    </header>
+
+    <main id="app">
+      <!-- lijst/tabel + detailpanelen -->
+      <section id="table"></section>
+      <section id="visual"></section>
+    </main>
+
+    <footer>
+      <small>© 2025</small>
+    </footer>
+
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>
