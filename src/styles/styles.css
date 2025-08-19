@@ -1,6 +1,82 @@
-:root { --gap: 1rem; font-family: system-ui, sans-serif; }
-body { margin: 0; }
-header, nav, footer { padding: var(--gap); }
-main { display: grid; gap: var(--gap); padding: var(--gap); }
-#table { overflow: auto; }
-.dark { background: #111; color: #eee; }
+
+/* Basis layout */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f9f9f9;
+  color: #333;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  background: #005ea8;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#controls {
+  display: flex;
+  gap: 0.5rem;
+}
+
+main {
+  flex: 1;
+  padding: 1rem;
+}
+
+/* Tabelstijl */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+thead {
+  background: #eaeaea;
+}
+
+th, td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+  background: #f6f6f6;
+}
+
+tbody tr:hover {
+  background: #dceeff;
+}
+
+/* Dark theme optioneel */
+.dark {
+  background: #1c1c1c;
+  color: #eaeaea;
+}
+
+.dark table {
+  background: #2c2c2c;
+}
+
+.dark thead {
+  background: #444;
+}
+
+.dark tbody tr:nth-child(even) {
+  background: #333;
+}
+
+.dark tbody tr:hover {
+  background: #555;
+}

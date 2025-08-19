@@ -1,32 +1,29 @@
-<!doctype html>
-<html lang="nl">
+
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Web Advanced Project</title>
   </head>
   <body>
-    <header>
-      <h1>Web Advanced – Project</h1>
-      <nav>
-        <input id="search" type="search" placeholder="Zoeken..." />
-        <select id="sort">
-          <option value="name-asc">Naam ↑</option>
-          <option value="name-desc">Naam ↓</option>
-        </select>
-        <button id="theme-toggle">Thema</button>
-      </nav>
-    </header>
+    <div id="app">
+      <header>
+        <h1>Bevolkingsstatistieken</h1>
+        <div id="controls">
+          <input type="text" id="search" placeholder="Zoek..." />
+          <select id="sort">
+            <option value="gemeente">Gemeente</option>
+            <option value="jaar">Jaar</option>
+          </select>
+          <button id="theme-toggle">🌗</button>
+        </div>
+      </header>
 
-    <main id="app">
-      <!-- lijst/tabel + detailpanelen -->
-      <section id="table"></section>
-      <section id="visual"></section>
-    </main>
-
-    <footer>
-      <small>© 2025</small>
-    </footer>
+      <main>
+        <section id="table"></section>
+      </main>
+    </div>
 
     <script type="module" src="/src/main.js"></script>
   </body>
