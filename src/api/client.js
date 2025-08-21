@@ -1,10 +1,9 @@
-
 const BASE = import.meta.env.VITE_API_BASE;
 const VIEW = import.meta.env.VITE_API_VIEW;
 
 export async function getPopulationData() {
   try {
-    const url = `${BASE}/${VIEW}`;
+    const url = `${BASE}/${VIEW}/result/JSON`;
     const res = await fetch(url);
 
     if (!res.ok) {
@@ -12,7 +11,10 @@ export async function getPopulationData() {
     }
 
     const raw = await res.json();
-    return normalizePopulationData(raw);
+
+    const normalized = normalizePopulationData(raw);
+
+    return normalized;
   } catch (err) {
     console.error("Fout bij ophalen Statbel data:", err);
     return [];
@@ -20,19 +22,17 @@ export async function getPopulationData() {
 }
 
 function normalizePopulationData(raw) {
-  if (!raw || !raw.data) return [];
+  if (!raw || !raw.facts) return [];
 
-  return raw.data
-    // filter: enkel rijen die een 'Value' hebben
-    .filter(item => item.Value !== null && item.Value !== undefined)
-    // map: elk item herschrijven naar vlakke structuur
+  return raw.facts
+    .filter(item => item["Bevolking op 01 januari 2025"] !== null && item["Bevolking op 01 januari 2025"] !== undefined)
     .map(item => ({
-      jaar: item.jaar || item.Year,
-      gemeente: item.gemeente || item.Municipality,
-      geslacht: item.geslacht || item.Sex,
-      leeftijd: item.leeftijd || item.Age,
-      nationaliteit: item.nationaliteit || item.Nationality,
-      burgerlijkeStaat: item.burgerlijkeStaat || item.MaritalStatus,
-      aantal: Number(item.aantal || item.Value) // forceren naar nummer
+      jaar: "2025", // jaar zit hier vast in de viewtitel
+      gemeente: item["Gewest"] || item["België"], // afhankelijk van granulariteit
+      geslacht: item["Geslacht"],
+      leeftijd: item["Leeftijdsgroep"],
+      nationaliteit: item["Mannen en vrouwen"], // of splitsen op Belg/niet-Belg als aanwezig
+      burgerlijkeStaat: item["Burgerlijke staat"],
+      aantal: Number(item["Bevolking op 01 januari 2025"])
     }));
 }
