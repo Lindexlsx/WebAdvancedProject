@@ -80,3 +80,17 @@ tbody tr:hover {
 .dark tbody tr:hover {
   background: #555;
 }
+
+th.sortable { cursor: pointer; user-select: none; }
+th.sortable:hover { text-decoration: underline; }
+
+.arrow {
+  cursor: pointer;
+  margin-left: 0.25rem;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.arrow:hover {
+  color: #000;
+}

@@ -10,7 +10,7 @@ const store = initStore();
 async function mount() {
   try {
     const records = await getBuildingData();
-    store.records = records;
+    store.data = records; // ✅ consistente property (geen store.records)
 
     renderUI();
   } catch (err) {
@@ -22,8 +22,15 @@ async function mount() {
 }
 
 function renderUI() {
-  renderFilters(store, () => renderHome(store));
-  renderHome(store);
+  // Filters opnieuw renderen, callback hertekent tabel
+  renderFilters(store, () => {
+    const visible = getVisibleRecords(store); // ✅ zoek + filter toegepast
+    renderHome(store, visible);
+  });
+
+  // Eerste keer tabel tekenen
+  const visible = getVisibleRecords(store);
+  renderHome(store, visible);
 }
 
 mount();
