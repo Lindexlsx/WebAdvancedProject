@@ -2,7 +2,7 @@
 
 ## I. Projectbeschrijving en functionaliteiten
 
-Dit project toont bevolkingsstatistieken uit de **Statbel API** in een webapplicatie gebouwd met **Vite** en **moderne JavaScript** (ES6+).  
+Dit project toont kadastrale statistieken van het gebouwenpark (Statbel API) in een webapplicatie gebouwd met **Vite** en **moderne JavaScript** (ES6+).  
 De toepassing ondersteunt data ophalen, normaliseren, filteren, sorteren en weergeven in een tabel.
 
 **Live URL:** [https://web-advanced-project.vercel.app/](https://web-advanced-project.vercel.app/)  
@@ -11,17 +11,15 @@ De toepassing ondersteunt data ophalen, normaliseren, filteren, sorteren en weer
 ### Functionaliteiten
 
 #### Dataverzameling & -weergave
-- ✅ Data wordt opgehaald uit de publieke Statbel API (endpoint met >20 objecten).
-- ✅ Data wordt getoond op visueel aantrekkelijke manier: tabelweergave met min. 6 kolommen.
-- Detailweergave van elk item:
-  Basisdetails van de getoonde items: jaar, gewest, geslacht, leeftijd, nationaliteit/burgerlijke staat, aantal.
+- Data wordt opgehaald uit de publieke Statbel API (endpoint met >20 objecten).
+- Data wordt getoond op visueel aantrekkelijke manier: tabelweergave met 6 kolommen.
+- Detailweergave van elk item: Basisdetails van de getoonde items: karakteristieken, gewest, gebouwtypes, aantallen.
+
 
 #### Interactiviteit
-- **Filterfunctionaliteit** (op type, locatie, datum of ander criterium).
-- **Zoekfunctie** (door data te doorzoeken).
-- **Sorteermogelijkheden** (alfabetisch, datum, …).
-
-  🔜 Filterfunctionaliteit, zoekfunctie en sorteren volgen nog.
+- **Zoekfunctie** (op gewest).
+- **Filterfunctionaliteit** (dropdown selectie op gewest).
+- **Sorteermogelijkheden** (alle kolommen oplopend/aflopend).
 
 #### Personalisatie
 - Gebruikers kunnen **favorieten opslaan**.
@@ -35,7 +33,7 @@ De toepassing ondersteunt data ophalen, normaliseren, filteren, sorteren en weer
   Basis responsive layout met tabelweergave.  
 - **Visueel aantrekkelijke interface** (moderne styling):
   Eenvoudige navigatie met header en controls. 
-- **Gebruiksvriendelijke navigatie** (knoppen, icoontjes, duidelijke feedback):
+- **Gebruiksvriendelijke navigatie** (zoekveld, filters, intuïtief sorteren van kolommen via pijltjes):
   🔜 Verdere verbeteringen in design en interactie volgen.
 
 ---
@@ -43,7 +41,8 @@ De toepassing ondersteunt data ophalen, normaliseren, filteren, sorteren en weer
 ## II. Gebruikte API’s
 
 - **Statbel Bestat API**  
-  Endpoint: [https://bestat.statbel.fgov.be/bestat/api/views/47672f4b-3de4-408f-a1bd-ef28a1fe7c91](https://bestat.statbel.fgov.be/bestat/api/views/47672f4b-3de4-408f-a1bd-ef28a1fe7c91)  
+  Endpoint:  
+  [https://bestat.statbel.fgov.be/bestat/api/views/6077dab9-47e8-468f-a53a-5237fa0673d6/result/JSON](https://bestat.statbel.fgov.be/bestat/api/views/6077dab9-47e8-468f-a53a-5237fa0673d6/result/JSON)  
   Documentatie/bron: [https://statbel.fgov.be](https://statbel.fgov.be)
 
 ---
@@ -56,32 +55,31 @@ De toepassing ondersteunt data ophalen, normaliseren, filteren, sorteren en weer
 - **Events aan elementen koppelen** → zie `src/main.js` (lijn 32–46: eventlisteners op search, sort, themeToggle)
 
 ### Modern JavaScript
-- **Gebruik van constanten** → overal (`const store = initStore()` in `src/main.js`, lijn 6)
-- **Template literals** → bv. `src/pages/Home.js` (lijn 5–24: tabel-HTML met backticks)
-- **Iteratie over arrays** → `src/pages/Home.js` (lijn 13–22: `store.data.map(...)`)
-- **Array methodes** → 
-  - `filter()` en `map()` in `src/api/client.js` (lijn 25–38)  
-  - `map()` in `src/pages/Home.js` (lijn 13–22)
-- **Arrow functions** → zie `src/main.js` (lijn 33–34: `(e) => { … }`)
-- **Conditional (ternary) operator** → 🔜 nog te implementeren (voorzien in `src/components/Card.js`)
-- **Callback functions** → eventhandlers in `src/main.js` (lijn 33, 37, 43)
-- **Promises** → fetch API in `src/api/client.js` (lijn 6–9)
-- **Async & Await** → `src/api/client.js` (lijn 3: `export async function getPopulationData()`)
-- **Observer API** (één voorbeeld volstaat) → 🔜 nog te voorzien, bv. `IntersectionObserver` in `src/pages/Home.js`
+- **Gebruik van constanten** → bv. `const store = initStore()` in `src/main.js` (lijn 6)
+- **Template literals** → `src/pages/Home.js` (lijn 39–69: tabel-HTML met backticks)
+- **Iteratie over arrays** → `src/pages/Home.js` (lijn 57–67: `rows.map(...)`)
+- **Array methodes** →  
+  - `filter()` en `forEach()` in `src/api/client.js` (lijn 26–46)  
+  - `map()` in `src/pages/Home.js` (lijn 57–67)
+- **Arrow functions** → `src/main.js` (lijn 27–30: `(e) => { … }`)
+- **Conditional (ternary) operator** → `src/state/store.js` (lijn 22–32, inline sorteercondities)
+- **Callback functions** → eventhandlers in `src/components/Filters.js` (lijn 49–102)
+- **Promises** → fetch API in `src/api/client.js` (lijn 7: `const res = await fetch(url)`)
+- **Async & Await** → `src/api/client.js` (lijn 4: `export async function getBuildingData()`)
+- **Observer API** → 🔜 nog te voorzien (bv. `IntersectionObserver` in `src/pages/Home.js`)
 
 ### Data & API
-- **Fetch om data op te halen** → `src/api/client.js` (lijn 6: `const res = await fetch(url)`)
-- **JSON manipuleren en weergeven** → normalisatie in `src/api/client.js` (lijn 25–38) + rendering in `src/pages/Home.js` (lijn 5–24)
+- **Fetch om data op te halen** → `src/api/client.js` (lijn 7–11)
+- **JSON manipuleren en weergeven** → normalisatie in `src/api/client.js` (lijn 21–65) + rendering in `src/pages/Home.js` (lijn 39–69)
 
 ### Opslag & validatie
-- **Formulier validatie** → voorlopig enkel zoekveld-event in `src/main.js` (lijn 33: `search.addEventListener('input', …)`)  
-  🔜 uitbreiden met echte validatie (bv. required, min. lengte)
+- **Formulier validatie** → `src/components/Filters.js` (lijn 63–87: min. lengte zoekterm + geldigheid gewest)  
 - **Gebruik van LocalStorage** → 🔜 voorzien in `src/lib/storage.js` (nog te implementeren)
 
 ### Styling & layout
 - **Basis HTML layout** → `index.html` (lijn 11–27: header, controls, main/table)
 - **Basis CSS** → `src/styles/styles.css` (lijn 1–21: body, header, layout; lijn 23–46: tabelstijl; lijn 48–63: dark theme)
-- **Gebruiksvriendelijke elementen** → zoekveld, dropdown en themaknoppen in `index.html` (lijn 15–20)  
+- **Gebruiksvriendelijke elementen** → zoekveld, dropdown en sorteerbare kolommen (`src/pages/Home.js` + `src/components/Filters.js`)
   🔜 uitbreiden met favorieten-knopjes of filtercomponent
 
 ### Tooling & structuur
@@ -123,7 +121,7 @@ De toepassing ondersteunt data ophalen, normaliseren, filteren, sorteren en weer
 
 ## V. Screenshots
 
-  (komt later verder op punt)
+  🔜 Nog toe te voegen
 
 ---
 
