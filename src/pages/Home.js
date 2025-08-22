@@ -16,7 +16,6 @@ export function renderHome(store) {
         <tr>
           <th>Karakteristieken</th>
           <th>Gewest</th>
-          <th>Jaar</th>
           <th>Huizen in gesloten bebouwing</th>
           <th>Huizen in halfopen bebouwing</th>
           <th>Huizen in open bebouwing, hoeven en kastelen</th>
@@ -28,7 +27,6 @@ export function renderHome(store) {
           <tr>
             <td>${r.karakteristieken}</td>
             <td>${r.gewest}</td>
-            <td>${r.jaar}</td>
             <td>${r.gesloten}</td>
             <td>${r.halfopen}</td>
             <td>${r.open}</td>
