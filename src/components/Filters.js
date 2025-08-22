@@ -1,9 +1,10 @@
-
 export function renderFilters(store, onChange) {
   const controls = document.getElementById("controls");
 
   // unieke gewesten ophalen (uit de dataset)
-  const gewesten = Array.from(new Set(store.data.map(r => r.gewest)));
+  const gewesten = Array.from(
+    new Set((store.data || []).map(r => r.gewest).filter(Boolean))
+  );
 
   controls.innerHTML = `
     <form id="filters-form">
@@ -37,16 +38,25 @@ export function renderFilters(store, onChange) {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const value = searchInput.value.trim();
+    const selectedGewest = filterGewest.value;
 
+    // bestaande validatie: minimaal 2 letters indien ingevuld
     if (value && value.length < 2) {
       errorBox.style.display = "block";
       errorBox.textContent = "Voer minstens 2 letters in";
       return;
-    } else {
-      errorBox.style.display = "none";
     }
 
+    // ➕ extra validatie: gekozen gewest moet bestaan in dataset (indien gekozen)
+    if (selectedGewest && !gewesten.includes(selectedGewest)) {
+      errorBox.style.display = "block";
+      errorBox.textContent = "Ongeldig gewest geselecteerd";
+      return;
+    }
+
+    errorBox.style.display = "none";
     store.search = value;
+    store.filters.gewest = selectedGewest; // state bij submit ook syncen
     onChange();
   });
 
