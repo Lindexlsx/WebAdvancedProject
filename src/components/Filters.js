@@ -60,9 +60,28 @@ export function renderFilters(store, onChange) {
     onChange();
   });
 
-  // ✅ Live update zoekveld
+  // ✅ Live update met inline validatie
   searchInput.addEventListener("input", (e) => {
-    store.search = e.target.value.trim();
+    const v = e.target.value.trim();
+
+    if (v.length === 0) {
+      // leeg: fout weg, zoekterm wissen, reset lijst
+      errorBox.style.display = "none";
+      store.search = "";
+      onChange();
+      return;
+    }
+
+    if (v.length < 2) {
+      // te kort: fout tonen, NIET filteren
+      errorBox.style.display = "block";
+      errorBox.textContent = "Voer minstens 2 letters in";
+      return;
+    }
+
+    // geldig: fout weg en filteren
+    errorBox.style.display = "none";
+    store.search = v;
     onChange();
   });
 
