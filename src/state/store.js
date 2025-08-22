@@ -1,9 +1,22 @@
+
 export function initStore() {
   return {
-    data: [],       // API data
-    favorites: [],  // id's of objecten
-    search: '',
-    sort: 'name-asc',
-    filters: {},    // bv. type/locatie/datum
+    records: [],    // API data
+    favorites: [],
+    search: "",     // zoekterm
+    sort: "gewest-asc",
+    filters: {},
   };
+}
+
+export function getVisibleRecords(store) {
+  const term = store.search?.toLowerCase() || "";
+
+  let result = store.records.filter(r => {
+    return term === "" 
+      ? true 
+      : r.gewest.toLowerCase().includes(term);
+  });
+
+  return result;
 }

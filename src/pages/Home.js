@@ -1,6 +1,15 @@
 
+import { getVisibleRecords } from '../state/store.js';
+
 export function renderHome(store) {
   const tableSection = document.getElementById('table');
+  const visible = getVisibleRecords(store);
+
+  if (visible.length === 0) {
+    tableSection.innerHTML = "<p>Geen resultaten gevonden.</p>";
+    return;
+  }
+
   tableSection.innerHTML = `
     <table>
       <thead>
@@ -15,7 +24,7 @@ export function renderHome(store) {
         </tr>
       </thead>
       <tbody>
-        ${store.data.map(r => `
+        ${visible.map(r => `
           <tr>
             <td>${r.karakteristieken}</td>
             <td>${r.gewest}</td>
