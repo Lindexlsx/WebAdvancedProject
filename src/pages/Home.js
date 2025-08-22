@@ -1,10 +1,32 @@
-// src/pages/Home.js
 
 export function renderHome(store) {
-  const app = document.getElementById('app');
-  app.innerHTML = `
-    <h2>Home</h2>
-    <p>Welkom bij mijn Web Advanced project!</p>
-    <p>Items in store: ${store.items.length}</p>
+  const tableSection = document.getElementById('table');
+  tableSection.innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>Karakteristieken</th>
+          <th>Gewest</th>
+          <th>Jaar</th>
+          <th>Huizen in gesloten bebouwing</th>
+          <th>Huizen in halfopen bebouwing</th>
+          <th>Huizen in open bebouwing, hoeven en kastelen</th>
+          <th>Buildings en flatgebouwen met appartementen</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${store.data.map(r => `
+          <tr>
+            <td>${r.karakteristieken}</td>
+            <td>${r.gewest}</td>
+            <td>${r.jaar}</td>
+            <td>${r.gesloten}</td>
+            <td>${r.halfopen}</td>
+            <td>${r.open}</td>
+            <td>${r.gebouwen}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    </table>
   `;
 }
