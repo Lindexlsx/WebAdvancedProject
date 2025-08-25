@@ -13,8 +13,9 @@ body {
   min-height: 100vh;
 }
 
+/* ===== HEADER ===== */
 header {
-  background: #005ea8;
+  background: rgb(31, 116, 182); /* Statbel blauw */
   color: white;
   padding: 1rem;
   display: flex;
@@ -27,12 +28,27 @@ header {
   gap: 0.5rem;
 }
 
+/* knop thema-switcher */
+header button {
+  background: white;
+  color: rgb(31, 116, 182);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 1rem;
+}
+header button:hover {
+  background: #f0f0f0;
+}
+
 main {
   flex: 1;
   padding: 1rem;
 }
 
-/* Tabelstijl */
+/* Tabelstijl (licht thema) */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -59,28 +75,31 @@ tbody tr:hover {
   background: #dceeff;
 }
 
-/* Dark theme optioneel */
-.dark {
-  background: #1c1c1c;
+/* ===== DARK THEME ===== */
+body.dark {
+  background: #121212;
   color: #eaeaea;
 }
 
-.dark table {
-  background: #2c2c2c;
+body.dark table {
+  background: #1e1e1e;
+  color: #eaeaea;
+}
+body.dark thead {
+  background: #2a2a2a;
+}
+body.dark th,
+body.dark td {
+  border-bottom: 1px solid #333;
+}
+body.dark tbody tr:nth-child(even) {
+  background: #1a1a1a;
+}
+body.dark tbody tr:hover {
+  background: #2f4f6f; /* donkerblauw accent */
 }
 
-.dark thead {
-  background: #444;
-}
-
-.dark tbody tr:nth-child(even) {
-  background: #333;
-}
-
-.dark tbody tr:hover {
-  background: #555;
-}
-
+/* Sorting arrows */
 th.sortable { cursor: pointer; user-select: none; }
 th.sortable:hover { text-decoration: underline; }
 
@@ -93,4 +112,12 @@ th.sortable:hover { text-decoration: underline; }
 
 .arrow:hover {
   color: #000;
+}
+
+/* arrows in dark theme */
+body.dark .arrow {
+  color: #fff;
+}
+body.dark .arrow:hover {
+  color: #ccc;
 }
