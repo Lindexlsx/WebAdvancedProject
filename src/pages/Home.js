@@ -48,10 +48,10 @@ export function renderHome(store) {
           <tr>
             <td>${r.karakteristieken}</td>
             <td>${r.gewest}</td>
-            <td>${r.gesloten}</td>
-            <td>${r.halfopen}</td>
-            <td>${r.open}</td>
-            <td>${r.gebouwen}</td>
+            <td class="numeric">${Number(r.gesloten).toLocaleString("nl-BE")}</td>
+            <td class="numeric">${Number(r.halfopen).toLocaleString("nl-BE")}</td>
+            <td class="numeric">${Number(r.open).toLocaleString("nl-BE")}</td>
+            <td class="numeric">${Number(r.gebouwen).toLocaleString("nl-BE")}</td>
           </tr>
         `).join('')}
       </tbody>
