@@ -5,7 +5,6 @@ export function renderFilters(store, onChange) {
   const controls = document.getElementById("controls");
   const favoritesBar = document.getElementById("favorites-bar");
 
-  // unieke gewesten ophalen (uit de dataset)
   const gewesten = Array.from(
     new Set((store.data || []).map(r => r.gewest).filter(Boolean))
   );
@@ -18,7 +17,7 @@ export function renderFilters(store, onChange) {
         placeholder="Zoek op gewest..." 
         value="${store.search || ""}"
       />
-      
+      <button type="submit">Zoek</button>
       <select id="filter-gewest">
         <option value="">Alle gewesten</option>
         ${gewesten.map(g => `
@@ -26,10 +25,7 @@ export function renderFilters(store, onChange) {
             ${g}
           </option>`).join("")}
       </select>
-
-      <button type="submit">Zoek</button>
     </form>
-
     <div id="error" style="color:red; display:none;"></div>
   `;
 
@@ -39,8 +35,7 @@ export function renderFilters(store, onChange) {
   const saveBtn = document.getElementById("save-view");
   const errorBox = document.getElementById("error");
 
-  // ✅ Validatie + zoekactie bij submit
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", e => {
     e.preventDefault();
     const value = searchInput.value.trim();
     const selectedGewest = filterGewest.value;
@@ -62,10 +57,9 @@ export function renderFilters(store, onChange) {
     onChange();
   });
 
-  // ✅ Live update
-  searchInput.addEventListener("input", (e) => {
+  searchInput.addEventListener("input", e => {
     const v = e.target.value.trim();
-    if (v.length === 0) {
+    if (!v) {
       errorBox.style.display = "none";
       store.search = "";
       onChange();
@@ -81,60 +75,54 @@ export function renderFilters(store, onChange) {
     onChange();
   });
 
-  filterGewest.addEventListener("change", (e) => {
+  filterGewest.addEventListener("change", e => {
     store.filters.gewest = e.target.value;
     onChange();
   });
 
-  // ⭐ View opslaan
   saveBtn.addEventListener("click", () => {
-    saveFavorite({
-      search: store.search,
-      filters: store.filters,
-      sort: store.sort
-    });
+    saveFavorite({ search: store.search, filters: store.filters, sort: store.sort });
     renderFavorites();
   });
 
-function renderFavorites() {
-  const favorites = loadFavorites();
-  if (favorites.length === 0) {
-    favoritesBar.innerHTML = "<p>Geen favorieten opgeslagen.</p>";
-    return;
+  function renderFavorites() {
+    const favorites = loadFavorites();
+    if (favorites.length === 0) {
+      favoritesBar.innerHTML = "<p>Geen favorieten opgeslagen.</p>";
+      return;
+    }
+
+    favoritesBar.innerHTML = `
+      <h4>Favorieten:</h4>
+      <ul>
+        ${favorites.map((f, i) => `
+          <li>
+            ⭐ View ${i + 1}
+            <button data-apply="${i}">Gebruik</button>
+            <button data-remove="${i}">X</button>
+          </li>
+        `).join("")}
+      </ul>
+    `;
+
+    favoritesBar.querySelectorAll("[data-apply]").forEach(btn =>
+      btn.addEventListener("click", () => {
+        const fav = loadFavorites()[btn.dataset.apply];
+        store.search = fav.search;
+        store.filters = fav.filters;
+        store.sort = fav.sort;
+        onChange();
+        renderFilters(store, onChange);
+      })
+    );
+
+    favoritesBar.querySelectorAll("[data-remove]").forEach(btn =>
+      btn.addEventListener("click", () => {
+        removeFavorite(btn.dataset.remove);
+        renderFavorites();
+      })
+    );
   }
-
-  favoritesBar.innerHTML = `
-    <h4>Favorieten:</h4>
-    <ul>
-      ${favorites.map((f, i) => `
-        <li>
-          ⭐ View ${i + 1}
-          <button data-apply="${i}">Gebruik</button>
-          <button data-remove="${i}">X</button>
-        </li>
-      `).join("")}
-    </ul>
-  `;
-
-  // events
-  favoritesBar.querySelectorAll("[data-apply]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const fav = loadFavorites()[btn.dataset.apply];
-      store.search = fav.search;
-      store.filters = fav.filters;
-      store.sort = fav.sort;
-      onChange();
-      renderFilters(store, onChange);
-    });
-  });
-
-  favoritesBar.querySelectorAll("[data-remove]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      removeFavorite(btn.dataset.remove);
-      renderFavorites();
-    });
-  });
-}
 
   renderFavorites();
 }

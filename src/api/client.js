@@ -6,10 +6,7 @@ export async function getBuildingData() {
   try {
     const url = `${BASE}/${VIEW}/result/JSON`;
     const res = await fetch(url);
-
-    if (!res.ok) {
-      throw new Error(`API error: ${res.status} ${res.statusText}`);
-    }
+    if (!res.ok) throw new Error(`API error: ${res.status} ${res.statusText}`);
 
     const raw = await res.json();
     const normalized = normalizeBuildingData(raw);
@@ -25,20 +22,20 @@ export async function getBuildingData() {
 }
 
 function normalizeBuildingData(raw) {
-  if (!raw || !raw.facts) return [];
+  if (!raw?.facts) return [];
 
   const grouped = {};
 
   raw.facts
-    .filter(item => item["Gewest"] && item["Gewest"] !== "België")
-    .forEach(item => {
-      const key = `${item["Karakteristieken"]}-${item["Gewest"]}-${item["Jaar"]}`;
+    .filter(i => i["Gewest"] && i["Gewest"] !== "België")
+    .forEach(i => {
+      const key = `${i["Karakteristieken"]}-${i["Gewest"]}-${i["Jaar"]}`;
 
       if (!grouped[key]) {
         grouped[key] = {
-          karakteristieken: item["Karakteristieken"],
-          gewest: item["Gewest"],
-          jaar: item["Jaar"],
+          karakteristieken: i["Karakteristieken"],
+          gewest: i["Gewest"],
+          jaar: i["Jaar"],
           gesloten: 0,
           halfopen: 0,
           open: 0,
@@ -46,18 +43,11 @@ function normalizeBuildingData(raw) {
         };
       }
 
-      const type = item["Gebouwtype"];
-      const aantal = Number(item["Aantal eenheden"] ?? 0);
-
-      if (type.includes("gesloten")) {
-        grouped[key].gesloten += aantal;
-      } else if (type.includes("halfopen")) {
-        grouped[key].halfopen += aantal;
-      } else if (type.includes("open")) {
-        grouped[key].open += aantal;
-      } else if (type.includes("flat") || type.includes("Buildings")) {
-        grouped[key].gebouwen += aantal;
-      }
+      const aantal = Number(i["Aantal eenheden"] ?? 0);
+      if (i["Gebouwtype"].includes("gesloten")) grouped[key].gesloten += aantal;
+      else if (i["Gebouwtype"].includes("halfopen")) grouped[key].halfopen += aantal;
+      else if (i["Gebouwtype"].includes("open")) grouped[key].open += aantal;
+      else if (i["Gebouwtype"].includes("flat") || i["Gebouwtype"].includes("Buildings")) grouped[key].gebouwen += aantal;
     });
 
   const result = Object.values(grouped);
@@ -65,5 +55,3 @@ function normalizeBuildingData(raw) {
   console.log("Eerste record:", result[0]);
   return result;
 }
-
-

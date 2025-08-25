@@ -3,39 +3,37 @@ export function initStore() {
   return {
     data: [],
     favorites: [],
-    search: '',
-    filters: { gewest: '' },
-    sort: { key: null, dir: 'asc' } // default: geen sortering
+    search: "",
+    filters: { gewest: "" },
+    sort: { key: null, dir: "asc" }
   };
 }
 
 export function getVisibleRecords(store) {
-  let result = [...store.data]; // veilig kopiëren
+  let result = [...store.data];
 
-  // ✅ zoekfilter met ternary
+  // zoekfilter
   result = result.filter(r =>
     store.search
-      ? r.gewest && r.gewest.toLowerCase().includes(store.search.toLowerCase())
+      ? r.gewest?.toLowerCase().includes(store.search.toLowerCase())
       : true
   );
 
-  // ✅ dropdown filter (gewoon behouden)
-  if (store.filters.gewest && store.filters.gewest.length > 0) {
+  // dropdown filter
+  if (store.filters.gewest) {
     result = result.filter(r => r.gewest === store.filters.gewest);
   }
 
-  // ✅ sorteren met ternary
-  if (store.sort && store.sort.key) {
+  // sortering
+  if (store.sort?.key) {
     const { key, dir } = store.sort;
-    result = [...result].sort((a, b) => {
-      const valA = a[key];
-      const valB = b[key];
-
+    result.sort((a, b) => {
+      const valA = a[key], valB = b[key];
       return !isNaN(valA) && !isNaN(valB)
-        ? (dir === 'asc' ? Number(valA) - Number(valB) : Number(valB) - Number(valA))
-        : (dir === 'asc'
-            ? String(valA).localeCompare(String(valB))
-            : String(valB).localeCompare(String(valA)));
+        ? dir === "asc" ? valA - valB : valB - valA
+        : dir === "asc"
+          ? String(valA).localeCompare(String(valB))
+          : String(valB).localeCompare(String(valA));
     });
   }
 

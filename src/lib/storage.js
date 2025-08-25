@@ -1,9 +1,15 @@
-const KEY = 'wa-project';
+
+const KEY = "wa-project";
+const STORAGE_KEY = "favoriteViews";
+let overwriteIndex = 0; // ronde-robin teller
 
 export const storage = {
   get() {
-    try { return JSON.parse(localStorage.getItem(KEY)) || {}; }
-    catch { return {}; }
+    try {
+      return JSON.parse(localStorage.getItem(KEY)) || {};
+    } catch {
+      return {};
+    }
   },
   set(obj) {
     localStorage.setItem(KEY, JSON.stringify(obj));
@@ -13,9 +19,6 @@ export const storage = {
     storage.set({ ...cur, ...patch });
   }
 };
-
-const STORAGE_KEY = "favoriteViews";
-let overwriteIndex = 0; // ronde-robin teller
 
 export function loadFavorites() {
   try {
@@ -31,13 +34,13 @@ export function saveFavorite(view) {
   if (favorites.length < 3) {
     favorites.push(view);
   } else {
-    // waarschuwing en bevestiging
-    const msg = "Opgelet: het maximale aantal favoriete views (3) is bereikt. " +
-                "De oudste opgeslagen view zal worden overschreven. Wilt u doorgaan?";
+    const msg =
+      "Opgelet: maximaal 3 favoriete views toegestaan. " +
+      "De oudste opgeslagen view wordt overschreven. Doorgaan?";
     if (!confirm(msg)) return;
 
     favorites[overwriteIndex] = view;
-    overwriteIndex = (overwriteIndex + 1) % 3; // ronde-robin
+    overwriteIndex = (overwriteIndex + 1) % 3;
   }
 
   localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
