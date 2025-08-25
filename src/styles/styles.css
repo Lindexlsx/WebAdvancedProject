@@ -19,17 +19,63 @@ header {
   color: white;
   padding: 1rem;
   display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.header-top h1 {
+  margin: 0;
+}
+
+.header-bottom {
+  display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-#controls {
+/* ===== ZOEKCONTROLES ===== */
+#controls form {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
+  align-items: center;
 }
 
-/* knop thema-switcher */
-header button {
+#controls input[type="text"],
+#controls select,
+#controls button {
+  height: 2.25rem;
+  padding: 0.25rem 0.5rem;
+  border: none;
+  border-radius: 4px;
+  box-sizing: border-box; /* zorgt dat alles exact even hoog is */
+}
+
+/* ===== FAVORIETENBALK ===== */
+#favorites-bar {
+  margin-left: 1rem; /* zelfde inspringing als titel en tabel */
+  margin-top: 0.5rem;
+}
+
+#favorites-bar ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.5rem 0 0 0;
+}
+
+#favorites-bar li {
+  margin-bottom: 0.25rem;
+}
+
+/* ===== KNOPSTIJL ===== */
+button {
   background: white;
   color: rgb(31, 116, 182);
   border: none;
@@ -37,10 +83,17 @@ header button {
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
-  margin-left: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* subtiele schaduw */
+  white-space: nowrap; /* breedte = tekstinhoud */
 }
-header button:hover {
+
+button:hover {
   background: #f0f0f0;
+}
+
+/* ook favorieten-knoppen (Gebruik, X) zelfde stijl */
+#favorites-bar button {
+  margin-left: 0.5rem;
 }
 
 main {

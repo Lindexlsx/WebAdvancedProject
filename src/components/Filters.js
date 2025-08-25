@@ -28,7 +28,6 @@ export function renderFilters(store, onChange) {
       </select>
 
       <button type="submit">Zoek</button>
-      <button type="button" id="save-view">⭐ Bewaar huidige view</button>
     </form>
 
     <div id="error" style="color:red; display:none;"></div>
