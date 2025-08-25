@@ -3,6 +3,7 @@ import { initStore, getVisibleRecords } from './state/store.js';
 import { renderHome } from './pages/Home.js';
 import { renderFilters } from './components/Filters.js';
 import { getBuildingData } from './api/client.js';
+import { initThemeObserver } from './lib/ThemeObserver.js';
 import './styles/styles.css';
 
 const store = initStore();
@@ -49,6 +50,18 @@ function initThemeToggle() {
     } else {
       btn.textContent = "Donker thema";
     }
+  });
+}
+
+/** Statistieken van thema-gebruik */
+function initThemeStats() {
+  initThemeObserver((theme) => {
+    console.log("📊 Gebruiker schakelde naar thema:", theme);
+
+    // Eenvoudige telling in localStorage
+    const stats = JSON.parse(localStorage.getItem("themeStats") || "{}");
+    stats[theme] = (stats[theme] || 0) + 1;
+    localStorage.setItem("themeStats", JSON.stringify(stats));
   });
 }
 
