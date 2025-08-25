@@ -3,6 +3,7 @@ import { initStore, getVisibleRecords } from './state/store.js';
 import { renderHome } from './pages/Home.js';
 import { renderFilters } from './components/Filters.js';
 import { getBuildingData } from './api/client.js';
+import { initThemeObserver } from './lib/themeObserver.js';
 import './styles/styles.css';
 
 const store = initStore();
@@ -14,6 +15,7 @@ async function mount() {
 
     renderUI();
     initThemeToggle(); // thema-switcher initialiseren
+    initThemeStats();  // observer activeren
   } catch (err) {
     document.getElementById('app').innerHTML = `
       <p style="color:red">Kon geen data ophalen. Probeer later opnieuw.</p>
@@ -51,5 +53,26 @@ function initThemeToggle() {
     }
   });
 }
+
+function initThemeStats() {
+  // init key als die nog niet bestaat
+  if (!localStorage.getItem("themeStats")) {
+    localStorage.setItem("themeStats", JSON.stringify({ light: 0, dark: 0 }));
+  }
+
+  initThemeObserver((theme) => {
+    console.log("📊 Gebruiker schakelde naar thema:", theme);
+
+    try {
+      const stats = JSON.parse(localStorage.getItem("themeStats")) || { light: 0, dark: 0 };
+      stats[theme] = (stats[theme] || 0) + 1;
+      localStorage.setItem("themeStats", JSON.stringify(stats));
+      console.log("✅ themeStats updated:", stats);
+    } catch (e) {
+      console.error("❌ Fout bij updaten themeStats:", e);
+    }
+  });
+}
+
 
 mount();
