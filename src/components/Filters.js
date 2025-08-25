@@ -1,5 +1,9 @@
+
+import { loadFavorites, saveFavorite, removeFavorite } from "../lib/storage.js";
+
 export function renderFilters(store, onChange) {
   const controls = document.getElementById("controls");
+  const favoritesBar = document.getElementById("favorites-bar");
 
   // unieke gewesten ophalen (uit de dataset)
   const gewesten = Array.from(
@@ -24,6 +28,7 @@ export function renderFilters(store, onChange) {
       </select>
 
       <button type="submit">Zoek</button>
+      <button type="button" id="save-view">⭐ Bewaar huidige view</button>
     </form>
 
     <div id="error" style="color:red; display:none;"></div>
@@ -32,6 +37,7 @@ export function renderFilters(store, onChange) {
   const form = document.getElementById("filters-form");
   const searchInput = document.getElementById("search");
   const filterGewest = document.getElementById("filter-gewest");
+  const saveBtn = document.getElementById("save-view");
   const errorBox = document.getElementById("error");
 
   // ✅ Validatie + zoekactie bij submit
@@ -40,14 +46,11 @@ export function renderFilters(store, onChange) {
     const value = searchInput.value.trim();
     const selectedGewest = filterGewest.value;
 
-    // bestaande validatie: minimaal 2 letters indien ingevuld
     if (value && value.length < 2) {
       errorBox.style.display = "block";
       errorBox.textContent = "Voer minstens 2 letters in";
       return;
     }
-
-    // ➕ extra validatie: gekozen gewest moet bestaan in dataset (indien gekozen)
     if (selectedGewest && !gewesten.includes(selectedGewest)) {
       errorBox.style.display = "block";
       errorBox.textContent = "Ongeldig gewest geselecteerd";
@@ -56,38 +59,83 @@ export function renderFilters(store, onChange) {
 
     errorBox.style.display = "none";
     store.search = value;
-    store.filters.gewest = selectedGewest; // state bij submit ook syncen
+    store.filters.gewest = selectedGewest;
     onChange();
   });
 
-  // ✅ Live update met inline validatie
+  // ✅ Live update
   searchInput.addEventListener("input", (e) => {
     const v = e.target.value.trim();
-
     if (v.length === 0) {
-      // leeg: fout weg, zoekterm wissen, reset lijst
       errorBox.style.display = "none";
       store.search = "";
       onChange();
       return;
     }
-
     if (v.length < 2) {
-      // te kort: fout tonen, NIET filteren
       errorBox.style.display = "block";
       errorBox.textContent = "Voer minstens 2 letters in";
       return;
     }
-
-    // geldig: fout weg en filteren
     errorBox.style.display = "none";
     store.search = v;
     onChange();
   });
 
-  // ✅ Filter dropdown event
   filterGewest.addEventListener("change", (e) => {
     store.filters.gewest = e.target.value;
     onChange();
   });
+
+  // ⭐ View opslaan
+  saveBtn.addEventListener("click", () => {
+    saveFavorite({
+      search: store.search,
+      filters: store.filters,
+      sort: store.sort
+    });
+    renderFavorites();
+  });
+
+function renderFavorites() {
+  const favorites = loadFavorites();
+  if (favorites.length === 0) {
+    favoritesBar.innerHTML = "<p>Geen favorieten opgeslagen.</p>";
+    return;
+  }
+
+  favoritesBar.innerHTML = `
+    <h4>Favorieten:</h4>
+    <ul>
+      ${favorites.map((f, i) => `
+        <li>
+          ⭐ View ${i + 1}
+          <button data-apply="${i}">Gebruik</button>
+          <button data-remove="${i}">X</button>
+        </li>
+      `).join("")}
+    </ul>
+  `;
+
+  // events
+  favoritesBar.querySelectorAll("[data-apply]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const fav = loadFavorites()[btn.dataset.apply];
+      store.search = fav.search;
+      store.filters = fav.filters;
+      store.sort = fav.sort;
+      onChange();
+      renderFilters(store, onChange);
+    });
+  });
+
+  favoritesBar.querySelectorAll("[data-remove]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      removeFavorite(btn.dataset.remove);
+      renderFavorites();
+    });
+  });
+}
+
+  renderFavorites();
 }
