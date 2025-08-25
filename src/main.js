@@ -15,6 +15,7 @@ async function mount() {
 
     renderUI();
     initThemeToggle(); // thema-switcher initialiseren
+    initThemeStats();
   } catch (err) {
     document.getElementById('app').innerHTML = `
       <p style="color:red">Kon geen data ophalen. Probeer later opnieuw.</p>
